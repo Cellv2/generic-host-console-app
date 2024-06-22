@@ -2,23 +2,14 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-public class FooService : IFooService
+public class FooService(ILogger<FooService> logger, IOptions<TestSettings> testSettingsOptions) : IFooService
 {
-    private readonly ILogger<FooService> _logger;
-    private readonly TestSettings _testSettings;
-
-    public FooService(IOptions<TestSettings> options, ILoggerFactory loggerFactory)
-    //public FooService(ILoggerFactory loggerFactory)
-    {
-        _logger = loggerFactory.CreateLogger<FooService>();
-
-        _testSettings = options.Value;
-    }
+    private readonly TestSettings _testSettings = testSettingsOptions.Value;
 
     public void DoThing(int number)
     {
-        _logger.LogWarning(_testSettings.SecondSetting);
+        logger.LogWarning(_testSettings.SecondSetting);
 
-        _logger.LogInformation($"Doing the thing {number}");
+        logger.LogInformation($"Doing the thing {number}");
     }
 }

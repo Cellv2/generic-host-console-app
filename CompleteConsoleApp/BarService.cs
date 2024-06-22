@@ -1,16 +1,16 @@
-﻿public class BarService : IBarService
-{
-    private readonly IFooService _fooService;
-    public BarService(IFooService fooService)
-    {
-        _fooService = fooService;
-    }
+﻿using Microsoft.Extensions.Logging;
 
+public class BarService(ILogger<BarService> logger, IFooService fooService) : IBarService
+{
     public void DoSomeRealWork()
     {
+        logger.LogInformation("BAWB, DO SUMTIN!");
+
         for (int i = 0; i < 10; i++)
         {
-            _fooService.DoThing(i);
+            fooService.DoThing(i);
         }
+
+        logger.LogInformation("It is done");
     }
 }
