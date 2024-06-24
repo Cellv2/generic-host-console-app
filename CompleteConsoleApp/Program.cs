@@ -2,11 +2,21 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 
 // See https://aka.ms/new-console-template for more information
 Console.WriteLine("Hello, World!");
 
+
+// configure serilog - 
+Log.Logger = new LoggerConfiguration()
+    //.ReadFrom.Configuration(new ConfigurationBuilder().AddJsonFile("appsettings.json").Build())
+    // ^--  this should be loaded in through the host context
+    .WriteTo.Console()
+    .CreateLogger();
+
+Log.Information("Starting up");
 
 // we are using the .NET Generic Host builder
 // dotnet add package Microsoft.Extensions.Hosting
@@ -23,6 +33,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<IFooService, FooService>();
 
     })
+    .UseSerilog()
     .Build();
 
 var service = host.Services.GetRequiredService<IBarService>();
